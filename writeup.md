@@ -20,7 +20,7 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./images/histogram.png "Visualization"
-[image2]: ./images/sample-unprocessed.png "Sample"
+[image2]: ./images/sample-unprocessed.png "Original Sample"
 [image3]: ./images/sample-preprocessed.png "Pre-processed"
 [image4]: ./images/sign0-formatted.png "Traffic Sign 0"
 [image5]: ./images/sign1-formatted.png "Traffic Sign 1"
@@ -45,11 +45,11 @@ You're reading it! and here is a link to my [project code](https://github.com/Ja
 The code for this step is contained in the third code cell of the IPython notebook.  I used the numpy library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is 34,799 images
-* The size of the validation set is 4,410 images (~12.7% of training)
-* The size of test set is 12,630 images
-* The shape of a traffic sign image is (32, 32, 3)
-* The number of unique classes in the data set is 43
+* The size of training set is **34,799** images
+* The size of the validation set is **4,410** images (~12.7% of training)
+* The size of test set is **12,630** images
+* The shape of a traffic sign image is **(32, 32, 3)**
+* The number of unique classes in the data set is **43**
 
 #### 2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
@@ -69,9 +69,12 @@ I tried using several different techniques for adding additional training images
 
 In any case, per minimum requirements, I scaled the data over -1 to 1.  This did have dramatic increase in training performance because in narrowed the scale of the training algorithm.  
 
+One step I tried as well, which I'm not convinced is having a positive effect, but at least isn't making things worse at this point is implementing PCA with whitening.  In concept it seems like I should be getting better results with more evenly balanced data around zero-center.
+
 Here are image outputs, before and after, from pre-processing:
 
 ![alt text][image2] ![alt text][image3]
+
 #TODO: Add images for unprocessed and processed
 
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
@@ -90,21 +93,25 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
 | Input         		| 32x32x3 RGB image   							|
-| Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x6 	|
-| Dropout					|	Keep probability 86%											|
+| Convolution 5x5     	| 1x1 stride, valid padding, 12 depth, outputs 28x28x12 	|
+| Dropout					|	Keep probability 90%											|
 | RELU	      	|    				|
-| Max Pooling	    | 2x2 size, 2x2 stride, outputs 14x14x6      									|
-| Convolution 5x5		| 1x1 stride, valid padding, outputs 10x10x16						|
+| Max Pooling	    | 2x2 size, 2x2 stride, outputs 14x14x12      									|
+| Convolution 5x5		| 1x1 stride, valid padding, outputs 10x10x32						|
 | RELU				|         									|
-|	Dropout					|	Keep probability 86%	|
-|	Max Pooling				| 2x2 size, 2x2 stride, outputs 5x5x16	|
-| Flatten   | Reshape to single 400 length array |
-| Fully Connected | Starting weights randomized, starting biases zero  |
+|	Dropout					|	Keep probability 90%	|
+|	Max Pooling				| 2x2 size, 2x2 stride, outputs 5x5x32	|
+| Flatten   | Reshape to single 800 length array |
+| Fully Connected | Starting weights randomized, starting biases zero, outputs 400 |
+|	Dropout					|	Keep probability 90%	|
+| RELU    |       |
+| Fully Connected | Starting weights randomized, starting biases zero, outputs 120 |
+|	Dropout					|	Keep probability 90%	|
+| RELU    |       |
+| Fully Connected | Starting weights randomized, starting biases zero, outputs 84 |
+|	Dropout					|	Keep probability 90%	|
 | RELU    |       |
 | Fully Connected | Starting weights randomized, starting biases zero |
-
-
-
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
@@ -119,20 +126,17 @@ Batch size, dropout probability, and learning rate were determined through exper
 The code for calculating the accuracy of the model is located in the sixteenth cell of the Ipython notebook.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ?
-* test set accuracy of ?
-##TODO: put in final accuracy results after last run
+* training set accuracy of **99.4%**
+* validation set accuracy of **93.3%**
+* test set accuracy of **92.5%**
 
 I started with the LeNet model and modified some steps.  The LeNet model seemed like a good starting point as it is a leading deep learning model when dealing with image recognition, plus it was strongly recommended! ;)
 
-In particular I added two dropout steps to reduce over-fitting.  A keep probability of around 86% seemed to provide good overall performance.
+I had significant difficulty achieving required validation accuracy of 93% without what I thought would be causing over-fitting.  I had added several layers of dropout and eventually doubled the initial layers in convolutions plus adding two more fully connected layers.  As noted below, I still think I have a problem with over-fitting, and given more time would focus in that area.
 
-I also tried different activation functions.  Replacing RELU with sigmoid and softplus functions.  Changing these didn't seem to have a direct improvement on performance, though I didn't take a lot of time to try to tweak some of the hyperparameters to better improve those functions.
+As part of this project tried different activation functions.  Replacing RELU with softplus, RELU6 and other functions.  Most times RELU was best, but in the end softsign was best performing for the current model.
 
-I switched from the AdamOptimizer to GradientDecentOptimizer.  This did show immediate improvement at the time, so I continued to use that method for updating values in back-propagation.
-
-Getting significantly over 90% accuracy is a good sign that this model is very good for classifying the image data.  Given additional time and effort, this certainly can be increased further.
+I also tried switching between AdamOptimizer and GradientDecentOptimizer.  For a while I was getting better performance with Gradient Decent, but ultimately went back to Adam.
 
 ### Test a Model on New Images
 
@@ -145,7 +149,7 @@ Here are five German traffic signs that I found on the web:
 
 I think the first image of my sample ("Road Work") is one of the hardest to classify, because the sign shape is typical of many different sign types, but the image within the sign seems like it could be hard to distinguish in a low-res image.
 
-The second ("80 km/h") and forth ("30 km/h") image I would expect should be relatively easy to classify.  The errors may come from confusing similar numbers.  30 and 80 can be confused as well as 60 with both.  
+The second ("80 km/h") and forth ("30 km/h") image I would expect should be relatively easy to classify.  The second image is the cleanest image, though as it seems to be computer generated.  The errors may come from confusing similar numbers.  30 and 80 can be confused as well as 60 with both.  
 
 The third image ("Right of Way at Next Intersection") seems to be pretty well defined and I would think should be fairly easy to classify.
 
@@ -159,20 +163,18 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| Road Work     		| Stop sign   									|
-| 80 km/h     			| U-turn 										|
-| Right of Way at Next Intersection		| Yield					|
-| 30 km/h	      		| Bumpy Road					 				|
-| No Entry			| Slippery Road      							|
-##TODO: Enter final predictions above and results below
+| Road Work     		| Vehicles > 3.5 metric tons prohibited   									|
+| 80 km/h     			| **80 km/h** 										|
+| Right of Way at Next Intersection		| Vehicles > 3.5 metric tons prohibited					|
+| 30 km/h	      		| 60 km/h					 				|
+| No Entry			| 60 km/h      							|
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of **20%**. This does not compare favorably to the accuracy on the test set.  :(
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The code for making predictions on my final model is located in the twentieth cell of the Ipython notebook.
 
-##TODO: Update below
 For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					|
