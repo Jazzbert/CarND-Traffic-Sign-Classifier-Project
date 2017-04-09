@@ -75,7 +75,7 @@ Here are image outputs, before and after, from pre-processing:
 
 ![alt text][image2] ![alt text][image3]
 
-#TODO: Add images for unprocessed and processed
+## TODO: Update images for unprocessed and processed from final run
 
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
@@ -89,6 +89,8 @@ Pre-processing was executed on each dataset to ensure consistent results.  The t
 
 The code for my final model is located in the eleventh cell of the Ipython notebook.  
 My final model consisted of the following layers:
+
+## TODO: Update final architecture when complete
 
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
@@ -124,6 +126,8 @@ Batch size, dropout probability, and learning rate were determined through exper
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 The code for calculating the accuracy of the model is located in the sixteenth cell of the Ipython notebook.
+
+## TODO: Update final accuracy numbers and description of approach when complete
 
 My final model results were:
 * training set accuracy of **99.4%**
@@ -176,6 +180,8 @@ The model was able to correctly guess 1 of the 5 traffic signs, which gives an a
 The code for making predictions on my final model is located in the twentieth cell of the Ipython notebook.
 
 For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+
+## TODO: put in the appropriate tables here after final run
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
