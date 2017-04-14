@@ -75,8 +75,6 @@ Here are image outputs, before and after, from pre-processing:
 
 ![alt text][image2] ![alt text][image3]
 
-## TODO: Update images for unprocessed and processed from final run
-
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
 The dataset provided for this lab was already split into training, validation, and test sets.  Since there was no specific requirement in the rubric, no steps were taken to randomize data across those data sets.
@@ -113,7 +111,7 @@ My final model consisted of the following layers:
 | Fully Connected | Starting weights randomized, starting biases zero, outputs 84 |
 |	Dropout					|	Keep probability 90%	|
 | RELU    |       |
-| Fully Connected | Starting weights randomized, starting biases zero |
+| Fully Connected | Starting weights randomized, starting biases zero, output to final 43 classes |
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
@@ -127,12 +125,10 @@ Batch size, dropout probability, and learning rate were determined through exper
 
 The code for calculating the accuracy of the model is located in the sixteenth cell of the Ipython notebook.
 
-## TODO: Update final accuracy numbers and description of approach when complete
-
 My final model results were:
-* training set accuracy of **99.4%**
-* validation set accuracy of **93.3%**
-* test set accuracy of **92.5%**
+* training set accuracy of **99.7%**
+* validation set accuracy of **94.1%**
+* test set accuracy of **92.8%**
 
 I started with the LeNet model and modified some steps.  The LeNet model seemed like a good starting point as it is a leading deep learning model when dealing with image recognition, plus it was strongly recommended! ;)
 
@@ -167,11 +163,11 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| Road Work     		| Vehicles > 3.5 metric tons prohibited   									|
+| Road Work     		| 80 km/h   									|
 | 80 km/h     			| **80 km/h** 										|
-| Right of Way at Next Intersection		| Vehicles > 3.5 metric tons prohibited					|
-| 30 km/h	      		| 60 km/h					 				|
-| No Entry			| 60 km/h      							|
+| Right of way at next intersection		| No passing					|
+| 30 km/h	      		| Dangerous right curve					 				|
+| No entry			| 80 km/h      							|
 
 The model was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of **20%**. This does not compare favorably to the accuracy on the test set.  :(
 
@@ -179,17 +175,55 @@ The model was able to correctly guess 1 of the 5 traffic signs, which gives an a
 
 The code for making predictions on my final model is located in the twentieth cell of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+The top 5 probablities and predictions are listed below.  This is one area I continue to struggle with.  Only the second image shows high confidence (probability) and predicts the correct class.  Most of the predictions, though have very strong tendency toward one prediction.  Image 3 shows the weakest confidence for a match.
 
-## TODO: put in the appropriate tables here after final run
+**Image 1: Road Work**
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 0.736         			| Slippery road   									|
+| 0.096     				| No passing 										|
+| 0.073				| 80 km/h											|
+| 0.052      			| Dangerous left curve					 				|
+| 0.018				    | 50 km/h      							|
 
 
-For the second image ...
+**Image 2: 80 km/h**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| 0.939         			| **80 km/h**   									|
+| 0.054     				| No passing for vehicles over 3.5 metric tons 										|
+| 0.007				| Dangerous right curve											|
+| 0.004      			| No passing					 				|
+| 0.002				    | 120 km/h      							|
+
+**Image 3: Right of way at next intersection**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| 0.495         			| Slippery road   									|
+| 0.206     				| Vehicles over 3.5 metric tons prohibited 										|
+| 0.097				| 80 km/h											|
+| 0.090      			| Dangerous right curve					 				|
+| 0.080				    | Dangerous left curve      							|
+
+**Image 4: 30 km/h**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| 0.691         			| 80 km/h   									|
+| 0.156     				| Dangerous right curve 										|
+| 0.118				| No passing for vehicles over 3.5 metric tons											|
+| 0.028      			| Vehicles over 3.5 metric tons prohibited					 				|
+| 0.003				    | End of speed limit      							|
+
+**Image 5: No entry**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| 0.902         			| 80 km/h   									|
+| 0.064     				| No passing for vehicles over 3.5 metric tons 										|
+| 0.032				| Dangerous right curve											|
+| 0.001      			| No passing					 				|
+| 0.001				    | 60 km/h      							|
