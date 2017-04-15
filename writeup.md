@@ -22,11 +22,11 @@ The goals / steps of this project are the following:
 [image1]: ./images/histogram.png "Visualization"
 [image2]: ./images/sample-unprocessed.png "Original Sample"
 [image3]: ./images/sample-preprocessed.png "Pre-processed"
-[image4]: ./images/sign0-formatted.png "Traffic Sign 0"
-[image5]: ./images/sign1-formatted.png "Traffic Sign 1"
-[image6]: ./images/sign2-formatted.png "Traffic Sign 2"
-[image7]: ./images/sign3-formatted.png "Traffic Sign 3"
-[image8]: ./images/sign4-formatted.png "Traffic Sign 4"
+[image4]: ./images/sign0-converted.bmp "Traffic Sign 0"
+[image5]: ./images/sign1-converted.bmp "Traffic Sign 1"
+[image6]: ./images/sign2-converted.bmp "Traffic Sign 2"
+[image7]: ./images/sign3-converted.bmp "Traffic Sign 3"
+[image8]: ./images/sign4-converted.bmp "Traffic Sign 4"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -75,8 +75,6 @@ Here are image outputs, before and after, from pre-processing:
 
 ![alt text][image2] ![alt text][image3]
 
-## TODO: Update images for unprocessed and processed from final run
-
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
 The dataset provided for this lab was already split into training, validation, and test sets.  Since there was no specific requirement in the rubric, no steps were taken to randomize data across those data sets.
@@ -90,36 +88,31 @@ Pre-processing was executed on each dataset to ensure consistent results.  The t
 The code for my final model is located in the eleventh cell of the Ipython notebook.  
 My final model consisted of the following layers:
 
-## TODO: Update final architecture when complete
-
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
 | Input         		| 32x32x3 RGB image   							|
 | Convolution 5x5     	| 1x1 stride, valid padding, 12 depth, outputs 28x28x12 	|
-| Dropout					|	Keep probability 90%											|
 | RELU	      	|    				|
 | Max Pooling	    | 2x2 size, 2x2 stride, outputs 14x14x12      									|
 | Convolution 5x5		| 1x1 stride, valid padding, outputs 10x10x32						|
 | RELU				|         									|
-|	Dropout					|	Keep probability 90%	|
 |	Max Pooling				| 2x2 size, 2x2 stride, outputs 5x5x32	|
 | Flatten   | Reshape to single 800 length array |
 | Fully Connected | Starting weights randomized, starting biases zero, outputs 400 |
-|	Dropout					|	Keep probability 90%	|
 | RELU    |       |
+|	Dropout					|	Keep probability 50%	|
 | Fully Connected | Starting weights randomized, starting biases zero, outputs 120 |
-|	Dropout					|	Keep probability 90%	|
 | RELU    |       |
+|	Dropout					|	Keep probability 50%	|
 | Fully Connected | Starting weights randomized, starting biases zero, outputs 84 |
-|	Dropout					|	Keep probability 90%	|
 | RELU    |       |
-| Fully Connected | Starting weights randomized, starting biases zero |
+| Fully Connected | Starting weights randomized, starting biases zero, outputs to final 43 classes |
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 The code for training this model is in the fifteenth code cell.  The pipeline for training is setup in the thirteenth code cell and the evaluation model in the fourteenth code cell.
 
-The various hyperparameters are contained in the tenth code cell.  While the validation accuracy continued to increase over with an ever increasing number of epochs, I decided to keep the number of epochs around 50 to limit the tendency to over-fit.
+The various hyperparameters are contained in the tenth code cell.  While the validation accuracy continued to increase over with an ever increasing number of epochs, I decided to keep the number of epochs around 30 to limit the tendency to over-fit.
 
 Batch size, dropout probability, and learning rate were determined through experimentation.  While not in the scope of this project, it seems like a next step to implement optimization code to narrow in on optimal values after changes in the model.
 
@@ -127,12 +120,10 @@ Batch size, dropout probability, and learning rate were determined through exper
 
 The code for calculating the accuracy of the model is located in the sixteenth cell of the Ipython notebook.
 
-## TODO: Update final accuracy numbers and description of approach when complete
-
 My final model results were:
-* training set accuracy of **99.4%**
-* validation set accuracy of **93.3%**
-* test set accuracy of **92.5%**
+* training set accuracy of **96.2%**
+* validation set accuracy of **95.1%**
+* test set accuracy of **93.4%**
 
 I started with the LeNet model and modified some steps.  The LeNet model seemed like a good starting point as it is a leading deep learning model when dealing with image recognition, plus it was strongly recommended! ;)
 
@@ -165,13 +156,13 @@ The code for making predictions on my final model is located in the eighteenth c
 
 Here are the results of the prediction:
 
-| Image			        |     Prediction	        					|
+| _Image_			        |     _Prediction_	        					|
 |:---------------------:|:---------------------------------------------:|
-| Road Work     		| Vehicles > 3.5 metric tons prohibited   									|
-| 80 km/h     			| **80 km/h** 										|
-| Right of Way at Next Intersection		| Vehicles > 3.5 metric tons prohibited					|
-| 30 km/h	      		| 60 km/h					 				|
-| No Entry			| 60 km/h      							|
+| Road Work     		| Bicycles crossing   									|
+| 80 km/h     			| 20 km/h 										|
+| Right of Way at Next Intersection		| Children crossing					|
+| 30 km/h	      		| 20 km/h					 				|
+| No Entry			| **No entry**      							|
 
 The model was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of **20%**. This does not compare favorably to the accuracy on the test set.  :(
 
@@ -179,17 +170,54 @@ The model was able to correctly guess 1 of the 5 traffic signs, which gives an a
 
 The code for making predictions on my final model is located in the twentieth cell of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+The top 5 probablities and predictions are listed below.  This is one area I continue to struggle with.  Only the last image predicts the correct class.  The predictions have very strong tendency toward one prediction, just the wrong ones.  Image 2 shows the weakest confidence for a match.
 
-## TODO: put in the appropriate tables here after final run
+**Image 1: Road Work**
 
 | Probability         	|     Prediction	        					|
-|:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+|:---------------------:|:---------------------------------------------|
+| 0.856         | 29 - Bicycles crossing	|
+| 0.062     		| 24 - Road narrows on the right	|
+| 0.037					| 26 - Traffic signals	|
+| 0.014	      	| 22 - Bumpy road	|
+| 0.014				  | 14 - Stop	|
 
+**Image 2: 80 km/h**
 
-For the second image ...
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------|
+| 0.577         | 0 - 20 km/h	|
+| 0.130     		| 4 - 70 km/h	|
+| 0.107					| 1 - 30 km/h	|
+| 0.088	      	| 8 - 120 km/h	|
+| 0.031				  | 29 - Bicycles crossing	|
+
+**Image 3: Right of way at next intersection**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------|
+| 0.789         | 28 - Children crossing	|
+| 0.158     		| 30 - Beware of ice/snow	|
+| 0.035					| 24 - Road narrows on the right	|
+| 0.014	      	| 29 - Bicycles crossing	|
+| 0.002				  | 23 - Slippery road	|
+
+**Image 4: 30 km/h**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------|
+| 0.948         | 0 - 20 Km/h	|
+| 0.022     		| 40 - Roundabout mandatory	|
+| 0.015					| 24 - Road narrows on the right	|
+| 0.005	      	| **1 - 30 km/h** 	|
+| 0.003				  | 38 - Keep right	|
+
+**Image 5: No entry**
+
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------|
+| 0.985         | **17 - No entry** 	|
+| 0.015     		| 14 - Stop 	|
+| 0.000					| 15 - No vehicles	|
+| 0.000	      	| 26 - Traffic signals	|
+| 0.000				  | 16 - Vehicles over 3.5 metric tons prohibited	|
